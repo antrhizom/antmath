@@ -1,1 +1,219 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lerntools - Übersicht</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animated-gradient {
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #4facfe);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Header mit animiertem Gradient -->
+    <div class="animated-gradient text-white py-20">
+        <div class="max-w-6xl mx-auto px-8 text-center">
+            <h1 class="text-5xl font-bold mb-4">🎓 Interaktive Lerntools</h1>
+            <p class="text-xl opacity-90">Spannende Übungen für Philosophie, Latein, Mathematik und mehr!</p>
+        </div>
+    </div>
 
+    <!-- Hauptinhalt -->
+    <div class="max-w-6xl mx-auto px-8 py-12">
+        <!-- Einleitung -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Willkommen!</h2>
+            <p class="text-gray-600 text-lg leading-relaxed">
+                Hier findest du eine Sammlung interaktiver Lerntools, die dir helfen, 
+                verschiedene Themen auf spielerische Weise zu verstehen. Jede Übung bietet 
+                dir detaillierte Erklärungen und am Ende ein persönliches Zertifikat.
+            </p>
+        </div>
+
+        <!-- Übungen Grid -->
+        <h2 class="text-3xl font-bold text-gray-800 mb-8">Verfügbare Übungen</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <!-- Philosophie -->
+            <a href="philosophie-quiz.html" class="card bg-white rounded-xl shadow-lg overflow-hidden block">
+                <div class="bg-gradient-to-br from-amber-400 to-orange-500 p-6 text-white">
+                    <div class="text-5xl mb-2">📚</div>
+                    <h3 class="text-2xl font-bold">Philosophie</h3>
+                </div>
+                <div class="p-6">
+                    <p class="text-gray-600 mb-4">
+                        Erkenne philosophische Sprachstile von Sloterdijk, Kant, Augustinus, Spinoza und Arendt.
+                    </p>
+                    <div class="flex items-center text-amber-600 font-semibold">
+                        <span>Jetzt üben</span>
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                    <div class="mt-4 flex gap-2">
+                        <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded">5 Zitate</span>
+                        <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded">3 Runden</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Latein -->
+            <a href="latein-quiz.html" class="card bg-white rounded-xl shadow-lg overflow-hidden block">
+                <div class="bg-gradient-to-br from-red-400 to-pink-500 p-6 text-white">
+                    <div class="text-5xl mb-2">🏛️</div>
+                    <h3 class="text-2xl font-bold">Latein</h3>
+                </div>
+                <div class="p-6">
+                    <p class="text-gray-600 mb-4">
+                        Meistere typische Übersetzungsfehler: Ablativus absolutus, AcI, PPP und mehr.
+                    </p>
+                    <div class="flex items-center text-red-600 font-semibold">
+                        <span>Jetzt üben</span>
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                    <div class="mt-4 flex gap-2">
+                        <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">9 Fehlerquellen</span>
+                        <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">3 Runden</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Mathematik -->
+            <a href="uebung1.html" class="card bg-white rounded-xl shadow-lg overflow-hidden block">
+                <div class="bg-gradient-to-br from-blue-400 to-purple-500 p-6 text-white">
+                    <div class="text-5xl mb-2">🧮</div>
+                    <h3 class="text-2xl font-bold">Mathe-Denksport</h3>
+                </div>
+                <div class="p-6">
+                    <p class="text-gray-600 mb-4">
+                        Löse clevere Textaufgaben mit versteckten Grundrechenarten. B1-Niveau.
+                    </p>
+                    <div class="flex items-center text-blue-600 font-semibold">
+                        <span>Jetzt üben</span>
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                    <div class="mt-4 flex gap-2">
+                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">9 Aufgaben</span>
+                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Mit Tipps</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Platzhalter für zukünftige Übungen -->
+            <div class="card bg-white rounded-xl shadow-lg overflow-hidden opacity-60">
+                <div class="bg-gradient-to-br from-green-400 to-teal-500 p-6 text-white">
+                    <div class="text-5xl mb-2">🌍</div>
+                    <h3 class="text-2xl font-bold">Geografie</h3>
+                </div>
+                <div class="p-6">
+                    <p class="text-gray-600 mb-4">
+                        Teste dein Wissen über Länder, Hauptstädte und geografische Besonderheiten.
+                    </p>
+                    <div class="flex items-center text-gray-400 font-semibold">
+                        <span>Bald verfügbar</span>
+                    </div>
+                    <div class="mt-4">
+                        <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">In Entwicklung</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card bg-white rounded-xl shadow-lg overflow-hidden opacity-60">
+                <div class="bg-gradient-to-br from-yellow-400 to-orange-400 p-6 text-white">
+                    <div class="text-5xl mb-2">🧪</div>
+                    <h3 class="text-2xl font-bold">Chemie</h3>
+                </div>
+                <div class="p-6">
+                    <p class="text-gray-600 mb-4">
+                        Lerne chemische Elemente, Verbindungen und Reaktionen spielerisch kennen.
+                    </p>
+                    <div class="flex items-center text-gray-400 font-semibold">
+                        <span>Bald verfügbar</span>
+                    </div>
+                    <div class="mt-4">
+                        <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">In Planung</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card bg-white rounded-xl shadow-lg overflow-hidden opacity-60">
+                <div class="bg-gradient-to-br from-purple-400 to-indigo-500 p-6 text-white">
+                    <div class="text-5xl mb-2">📖</div>
+                    <h3 class="text-2xl font-bold">Literatur</h3>
+                </div>
+                <div class="p-6">
+                    <p class="text-gray-600 mb-4">
+                        Erkenne Autoren anhand ihres Schreibstils und literarischer Stilmittel.
+                    </p>
+                    <div class="flex items-center text-gray-400 font-semibold">
+                        <span>Bald verfügbar</span>
+                    </div>
+                    <div class="mt-4">
+                        <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">In Planung</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Features -->
+        <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center">
+                <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Interaktiv</h3>
+                <p class="text-gray-600">Sofortiges Feedback und detaillierte Erklärungen zu jeder Antwort</p>
+            </div>
+            <div class="text-center">
+                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Zertifikat</h3>
+                <p class="text-gray-600">Erhalte nach jeder Übung ein persönliches Lernzertifikat</p>
+            </div>
+            <div class="text-center">
+                <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Kostenlos</h3>
+                <p class="text-gray-600">Alle Lerntools sind komplett kostenlos und ohne Anmeldung nutzbar</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-20">
+        <div class="max-w-6xl mx-auto px-8 text-center">
+            <p class="text-gray-400">Interaktive Lerntools © 2024 - Lernen leicht gemacht</p>
+            <p class="text-gray-500 text-sm mt-2">Entwickelt mit ❤️ für besseres Lernen</p>
+        </div>
+    </footer>
+</body>
+</html>
