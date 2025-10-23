@@ -1,513 +1,563 @@
-import React, { useState } from 'react';
-import { ChevronRight, Award, Printer, Calculator } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathe-Basis: Einfache Rechenaufgaben</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
 
-const MathBasicQuiz = () => {
-  const [stage, setStage] = useState('welcome');
-  const [username, setUsername] = useState('');
-  const [currentRound, setCurrentRound] = useState(0);
-  const [currentPuzzle, setCurrentPuzzle] = useState(0);
-  const [answers, setAnswers] = useState([]);
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [learnings, setLearnings] = useState([]);
-  const [showHint, setShowHint] = useState(false);
-  const [showContinueOption, setShowContinueOption] = useState(false);
+    <script type="text/babel">
+        const { useState } = React;
 
-  const allRounds = [
-    // Runde 1 - Pflicht
-    [
-      {
-        category: "Einfache Addition",
-        color: "blue",
-        puzzle: "Maria kauft 3 Äpfel und 5 Bananen. Wie viele Früchte kauft sie insgesamt?",
-        options: ["6", "7", "8", "9"],
-        correct: "8",
-        explanation: "Wir addieren die Äpfel und Bananen: 3 + 5 = 8 Früchte insgesamt.",
-        hint: "Zähle alle Früchte zusammen: Äpfel + Bananen"
-      },
-      {
-        category: "Einfache Subtraktion",
-        color: "green",
-        puzzle: "Ein Bus hat 25 Plätze. 18 Plätze sind besetzt. Wie viele Plätze sind noch frei?",
-        options: ["5", "6", "7", "8"],
-        correct: "7",
-        explanation: "Wir ziehen die besetzten Plätze von allen Plätzen ab: 25 - 18 = 7 freie Plätze.",
-        hint: "Alle Plätze minus besetzte Plätze = freie Plätze"
-      },
-      {
-        category: "Einfache Multiplikation",
-        color: "purple",
-        puzzle: "Ein Heft kostet 4 Euro. Tom kauft 6 Hefte. Wie viel bezahlt er?",
-        options: ["20 Euro", "22 Euro", "24 Euro", "26 Euro"],
-        correct: "24 Euro",
-        explanation: "Wir multiplizieren den Preis pro Heft mit der Anzahl: 4 Euro × 6 = 24 Euro.",
-        hint: "Preis für ein Heft mal Anzahl der Hefte"
-      }
-    ],
-    // Runde 2 - Optional
-    [
-      {
-        category: "Einfache Division",
-        color: "orange",
-        puzzle: "12 Kinder teilen sich 48 Bonbons gleichmäßig auf. Wie viele Bonbons bekommt jedes Kind?",
-        options: ["3", "4", "5", "6"],
-        correct: "4",
-        explanation: "Wir teilen alle Bonbons durch die Anzahl der Kinder: 48 ÷ 12 = 4 Bonbons pro Kind.",
-        hint: "Alle Bonbons geteilt durch die Anzahl der Kinder"
-      },
-      {
-        category: "Geld zählen",
-        color: "red",
-        puzzle: "Lisa hat drei 5-Euro-Scheine und vier 2-Euro-Münzen. Wie viel Geld hat sie?",
-        options: ["19 Euro", "21 Euro", "23 Euro", "25 Euro"],
-        correct: "23 Euro",
-        explanation: "Erst die Scheine: 3 × 5 = 15 Euro. Dann die Münzen: 4 × 2 = 8 Euro. Zusammen: 15 + 8 = 23 Euro.",
-        hint: "Rechne erst die Scheine, dann die Münzen, dann addiere beides."
-      },
-      {
-        category: "Verdoppeln",
-        color: "cyan",
-        puzzle: "Jan hat 7 Murmeln. Seine Schwester gibt ihm nochmal genauso viele. Wie viele Murmeln hat Jan jetzt?",
-        options: ["12", "13", "14", "15"],
-        correct: "14",
-        explanation: "Jan verdoppelt seine Murmeln: 7 + 7 = 14 oder 7 × 2 = 14 Murmeln.",
-        hint: "Wenn du etwas verdoppelst, hast du es zweimal."
-      }
-    ],
-    // Runde 3 - Optional
-    [
-      {
-        category: "Halbieren",
-        color: "pink",
-        puzzle: "Eine Pizza wird in 2 gleiche Teile geteilt. Wenn die ganze Pizza 16 Stücke hat, wie viele Stücke sind in einem halben Teil?",
-        options: ["6", "7", "8", "9"],
-        correct: "8",
-        explanation: "Die Hälfte bedeutet: durch 2 teilen. 16 ÷ 2 = 8 Stücke in jedem Teil.",
-        hint: "Halbieren bedeutet: durch 2 teilen"
-      },
-      {
-        category: "Reihenfolge",
-        color: "yellow",
-        puzzle: "Bei einem Wettlauf sind 20 Läufer. Max ist auf Platz 8. Wie viele Läufer sind vor ihm?",
-        options: ["6", "7", "8", "9"],
-        correct: "7",
-        explanation: "Wenn Max auf Platz 8 ist, sind Platz 1, 2, 3, 4, 5, 6 und 7 vor ihm. Das sind 7 Läufer.",
-        hint: "Zähle die Plätze vor Platz 8."
-      },
-      {
-        category: "Einfache Differenz",
-        color: "indigo",
-        puzzle: "Sarah ist 12 Jahre alt, ihr Bruder ist 7 Jahre alt. Um wie viele Jahre ist Sarah älter?",
-        options: ["3", "4", "5", "6"],
-        correct: "5",
-        explanation: "Wir ziehen das Alter des Bruders von Sarahs Alter ab: 12 - 7 = 5 Jahre Unterschied.",
-        hint: "Älteres Alter minus jüngeres Alter = Unterschied"
-      }
-    ]
-  ];
+        const ChevronRight = () => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        );
 
-  const getColorClasses = (color) => {
-    const colorMap = {
-      'blue': { bg: 'bg-blue-50', border: 'border-blue-600', label: 'bg-blue-200' },
-      'green': { bg: 'bg-green-50', border: 'border-green-600', label: 'bg-green-200' },
-      'purple': { bg: 'bg-purple-50', border: 'border-purple-600', label: 'bg-purple-200' },
-      'orange': { bg: 'bg-orange-50', border: 'border-orange-600', label: 'bg-orange-200' },
-      'red': { bg: 'bg-red-50', border: 'border-red-600', label: 'bg-red-200' },
-      'cyan': { bg: 'bg-cyan-50', border: 'border-cyan-600', label: 'bg-cyan-200' },
-      'pink': { bg: 'bg-pink-50', border: 'border-pink-600', label: 'bg-pink-200' },
-      'yellow': { bg: 'bg-yellow-50', border: 'border-yellow-600', label: 'bg-yellow-200' },
-      'indigo': { bg: 'bg-indigo-50', border: 'border-indigo-600', label: 'bg-indigo-200' }
-    };
-    return colorMap[color] || colorMap['blue'];
-  };
+        const Award = ({ className }) => (
+            <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="8" r="7"></circle>
+                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+            </svg>
+        );
 
-  const handleStart = () => {
-    if (username.trim()) {
-      setStage('quiz');
-    }
-  };
+        const Printer = () => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+        );
 
-  const handleAnswer = (answer) => {
-    setSelectedAnswer(answer);
-    setShowFeedback(true);
+        const Calculator = ({ className }) => (
+            <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+                <line x1="8" y1="6" x2="16" y2="6"></line>
+                <line x1="16" y1="14" x2="16" y2="18"></line>
+                <line x1="8" y1="14" x2="8" y2="18"></line>
+                <line x1="12" y1="14" x2="12" y2="18"></line>
+                <line x1="8" y1="10" x2="8" y2="10"></line>
+                <line x1="12" y1="10" x2="12" y2="10"></line>
+                <line x1="16" y1="10" x2="16" y2="10"></line>
+            </svg>
+        );
 
-    const currentData = allRounds[currentRound][currentPuzzle];
-    const isCorrect = answer === currentData.correct;
+        const MathBasicQuiz = () => {
+            const [stage, setStage] = useState('welcome');
+            const [username, setUsername] = useState('');
+            const [currentRound, setCurrentRound] = useState(0);
+            const [currentPuzzle, setCurrentPuzzle] = useState(0);
+            const [answers, setAnswers] = useState([]);
+            const [showFeedback, setShowFeedback] = useState(false);
+            const [selectedAnswer, setSelectedAnswer] = useState(null);
+            const [learnings, setLearnings] = useState([]);
+            const [showHint, setShowHint] = useState(false);
+            const [showContinueOption, setShowContinueOption] = useState(false);
 
-    setAnswers([...answers, {
-      category: currentData.category,
-      correct: isCorrect,
-      puzzle: currentData.puzzle.substring(0, 50) + "..."
-    }]);
+            const allRounds = [
+                // Runde 1 - Pflicht
+                [
+                    {
+                        category: "Einfache Addition",
+                        color: "blue",
+                        puzzle: "Maria kauft 3 Äpfel und 5 Bananen. Wie viele Früchte kauft sie insgesamt?",
+                        options: ["6", "7", "8", "9"],
+                        correct: "8",
+                        explanation: "Wir addieren die Äpfel und Bananen: 3 + 5 = 8 Früchte insgesamt.",
+                        hint: "Zähle alle Früchte zusammen: Äpfel + Bananen"
+                    },
+                    {
+                        category: "Einfache Subtraktion",
+                        color: "green",
+                        puzzle: "Ein Bus hat 25 Plätze. 18 Plätze sind besetzt. Wie viele Plätze sind noch frei?",
+                        options: ["5", "6", "7", "8"],
+                        correct: "7",
+                        explanation: "Wir ziehen die besetzten Plätze von allen Plätzen ab: 25 - 18 = 7 freie Plätze.",
+                        hint: "Alle Plätze minus besetzte Plätze = freie Plätze"
+                    },
+                    {
+                        category: "Einfache Multiplikation",
+                        color: "purple",
+                        puzzle: "Ein Heft kostet 4 Euro. Tom kauft 6 Hefte. Wie viel bezahlt er?",
+                        options: ["20 Euro", "22 Euro", "24 Euro", "26 Euro"],
+                        correct: "24 Euro",
+                        explanation: "Wir multiplizieren den Preis pro Heft mit der Anzahl: 4 Euro × 6 = 24 Euro.",
+                        hint: "Preis für ein Heft mal Anzahl der Hefte"
+                    }
+                ],
+                // Runde 2 - Optional
+                [
+                    {
+                        category: "Einfache Division",
+                        color: "orange",
+                        puzzle: "12 Kinder teilen sich 48 Bonbons gleichmäßig auf. Wie viele Bonbons bekommt jedes Kind?",
+                        options: ["3", "4", "5", "6"],
+                        correct: "4",
+                        explanation: "Wir teilen alle Bonbons durch die Anzahl der Kinder: 48 ÷ 12 = 4 Bonbons pro Kind.",
+                        hint: "Alle Bonbons geteilt durch die Anzahl der Kinder"
+                    },
+                    {
+                        category: "Geld zählen",
+                        color: "red",
+                        puzzle: "Lisa hat drei 5-Euro-Scheine und vier 2-Euro-Münzen. Wie viel Geld hat sie?",
+                        options: ["19 Euro", "21 Euro", "23 Euro", "25 Euro"],
+                        correct: "23 Euro",
+                        explanation: "Erst die Scheine: 3 × 5 = 15 Euro. Dann die Münzen: 4 × 2 = 8 Euro. Zusammen: 15 + 8 = 23 Euro.",
+                        hint: "Rechne erst die Scheine, dann die Münzen, dann addiere beides."
+                    },
+                    {
+                        category: "Verdoppeln",
+                        color: "cyan",
+                        puzzle: "Jan hat 7 Murmeln. Seine Schwester gibt ihm nochmal genauso viele. Wie viele Murmeln hat Jan jetzt?",
+                        options: ["12", "13", "14", "15"],
+                        correct: "14",
+                        explanation: "Jan verdoppelt seine Murmeln: 7 + 7 = 14 oder 7 × 2 = 14 Murmeln.",
+                        hint: "Wenn du etwas verdoppelst, hast du es zweimal."
+                    }
+                ],
+                // Runde 3 - Optional
+                [
+                    {
+                        category: "Halbieren",
+                        color: "pink",
+                        puzzle: "Eine Pizza wird in 2 gleiche Teile geteilt. Wenn die ganze Pizza 16 Stücke hat, wie viele Stücke sind in einem halben Teil?",
+                        options: ["6", "7", "8", "9"],
+                        correct: "8",
+                        explanation: "Die Hälfte bedeutet: durch 2 teilen. 16 ÷ 2 = 8 Stücke in jedem Teil.",
+                        hint: "Halbieren bedeutet: durch 2 teilen"
+                    },
+                    {
+                        category: "Reihenfolge",
+                        color: "yellow",
+                        puzzle: "Bei einem Wettlauf sind 20 Läufer. Max ist auf Platz 8. Wie viele Läufer sind vor ihm?",
+                        options: ["6", "7", "8", "9"],
+                        correct: "7",
+                        explanation: "Wenn Max auf Platz 8 ist, sind Platz 1, 2, 3, 4, 5, 6 und 7 vor ihm. Das sind 7 Läufer.",
+                        hint: "Zähle die Plätze vor Platz 8."
+                    },
+                    {
+                        category: "Einfache Differenz",
+                        color: "indigo",
+                        puzzle: "Sarah ist 12 Jahre alt, ihr Bruder ist 7 Jahre alt. Um wie viele Jahre ist Sarah älter?",
+                        options: ["3", "4", "5", "6"],
+                        correct: "5",
+                        explanation: "Wir ziehen das Alter des Bruders von Sarahs Alter ab: 12 - 7 = 5 Jahre Unterschied.",
+                        hint: "Älteres Alter minus jüngeres Alter = Unterschied"
+                    }
+                ]
+            ];
 
-    if (isCorrect) {
-      setLearnings([...learnings, {
-        category: currentData.category,
-        puzzle: currentData.puzzle.substring(0, 60) + "...",
-        explanation: currentData.explanation
-      }]);
-    }
-  };
+            const getColorClasses = (color) => {
+                const colorMap = {
+                    'blue': { bg: 'bg-blue-50', border: 'border-blue-600', label: 'bg-blue-200' },
+                    'green': { bg: 'bg-green-50', border: 'border-green-600', label: 'bg-green-200' },
+                    'purple': { bg: 'bg-purple-50', border: 'border-purple-600', label: 'bg-purple-200' },
+                    'orange': { bg: 'bg-orange-50', border: 'border-orange-600', label: 'bg-orange-200' },
+                    'red': { bg: 'bg-red-50', border: 'border-red-600', label: 'bg-red-200' },
+                    'cyan': { bg: 'bg-cyan-50', border: 'border-cyan-600', label: 'bg-cyan-200' },
+                    'pink': { bg: 'bg-pink-50', border: 'border-pink-600', label: 'bg-pink-200' },
+                    'yellow': { bg: 'bg-yellow-50', border: 'border-yellow-600', label: 'bg-yellow-200' },
+                    'indigo': { bg: 'bg-indigo-50', border: 'border-indigo-600', label: 'bg-indigo-200' }
+                };
+                return colorMap[color] || colorMap['blue'];
+            };
 
-  const handleNext = () => {
-    setShowFeedback(false);
-    setSelectedAnswer(null);
-    setShowHint(false);
+            const handleStart = () => {
+                if (username.trim()) {
+                    setStage('quiz');
+                }
+            };
 
-    if (currentPuzzle < allRounds[currentRound].length - 1) {
-      setCurrentPuzzle(currentPuzzle + 1);
-    } else if (currentRound === 0) {
-      // Nach erster Runde: Zwischenzertifikat
-      setShowContinueOption(true);
-      setStage('certificate');
-    } else if (currentRound < allRounds.length - 1) {
-      setCurrentRound(currentRound + 1);
-      setCurrentPuzzle(0);
-    } else {
-      setShowContinueOption(false);
-      setStage('certificate');
-    }
-  };
+            const handleAnswer = (answer) => {
+                setSelectedAnswer(answer);
+                setShowFeedback(true);
 
-  const handleContinue = () => {
-    setCurrentRound(currentRound + 1);
-    setCurrentPuzzle(0);
-    setStage('quiz');
-  };
+                const currentData = allRounds[currentRound][currentPuzzle];
+                const isCorrect = answer === currentData.correct;
 
-  const handleFinish = () => {
-    setShowContinueOption(false);
-    setStage('certificate');
-  };
+                setAnswers([...answers, {
+                    category: currentData.category,
+                    correct: isCorrect,
+                    puzzle: currentData.puzzle.substring(0, 50) + "..."
+                }]);
 
-  const handlePrint = () => {
-    window.print();
-  };
+                if (isCorrect) {
+                    setLearnings([...learnings, {
+                        category: currentData.category,
+                        puzzle: currentData.puzzle.substring(0, 60) + "...",
+                        explanation: currentData.explanation
+                    }]);
+                }
+            };
 
-  const correctAnswers = answers.filter(a => a.correct).length;
-  const totalAnswers = answers.length;
+            const handleNext = () => {
+                setShowFeedback(false);
+                setSelectedAnswer(null);
+                setShowHint(false);
 
-  if (stage === 'welcome') {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 p-8">
-        <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-xl p-8">
-          <div className="flex items-center justify-center mb-6">
-            <Calculator className="w-12 h-12 text-green-600 mr-4" />
-            <h1 className="text-4xl font-bold text-gray-800">
-              Mathe-Basis
-            </h1>
-          </div>
-          <div className="prose prose-lg mb-8">
-            <p className="text-gray-700">
-              Willkommen! Hier übst du die Grundrechenarten mit einfachen, klaren Aufgaben.
-            </p>
-            <p className="text-gray-700">
-              <strong>Perfekt für:</strong> Anfänger und zum Auffrischen der Grundlagen.
-              Die Aufgaben sind direkt und klar formuliert.
-            </p>
-            <div className="bg-green-50 p-4 rounded-lg my-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                Aufbau:
-              </h3>
-              <ul className="list-disc list-inside space-y-1 text-gray-700">
-                <li><strong>Erste Runde:</strong> 3 Basis-Aufgaben (Pflicht)</li>
-                <li><strong>Weitere Runden:</strong> Je 3 Aufgaben (optional)</li>
-                <li>Nach jeder Runde kannst du entscheiden: weitermachen oder aufhören</li>
-                <li>Level: <strong>A2/Anfang B1 (einfache Grundlagen)</strong></li>
-              </ul>
-            </div>
-            <p className="text-gray-700">
-              <strong>Tipp:</strong> Bei jeder Aufgabe kannst du einen Hinweis einblenden lassen!
-            </p>
-          </div>
-          
-          <div className="space-y-4">
-            <label className="block">
-              <span className="text-gray-700 font-semibold">Dein Name für das Zertifikat:</span>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                placeholder="Gib deinen Namen ein"
-              />
-            </label>
-            <button
-              onClick={handleStart}
-              disabled={!username.trim()}
-              className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition"
-            >
-              Los geht's <ChevronRight />
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+                if (currentPuzzle < allRounds[currentRound].length - 1) {
+                    setCurrentPuzzle(currentPuzzle + 1);
+                } else if (currentRound === 0) {
+                    setShowContinueOption(true);
+                    setStage('certificate');
+                } else if (currentRound < allRounds.length - 1) {
+                    setCurrentRound(currentRound + 1);
+                    setCurrentPuzzle(0);
+                } else {
+                    setShowContinueOption(false);
+                    setStage('certificate');
+                }
+            };
 
-  if (stage === 'quiz') {
-    const currentData = allRounds[currentRound][currentPuzzle];
-    const isCorrect = selectedAnswer === currentData.correct;
-    const colors = getColorClasses(currentData.color);
+            const handleContinue = () => {
+                setCurrentRound(currentRound + 1);
+                setCurrentPuzzle(0);
+                setStage('quiz');
+            };
 
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-green-100 p-8">
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-white rounded-lg shadow-xl p-8">
-            <div className="mb-6">
-              <div className="flex justify-between text-sm text-gray-600 mb-2">
-                <span>Runde {currentRound + 1} {currentRound === 0 ? '(Pflicht)' : '(Optional)'}</span>
-                <span>Aufgabe {currentPuzzle + 1} von {allRounds[currentRound].length}</span>
-              </div>
-              <div className="mb-2">
-                <span className={`inline-block ${colors.label} text-gray-800 px-3 py-1 rounded-full text-sm font-semibold`}>
-                  {currentData.category}
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-green-600 h-2 rounded-full transition-all"
-                  style={{ 
-                    width: `${((currentPuzzle + 1) / allRounds[currentRound].length) * 100}%` 
-                  }}
-                />
-              </div>
-            </div>
+            const handleFinish = () => {
+                setShowContinueOption(false);
+                setStage('certificate');
+            };
 
-            <div className={`${colors.bg} p-6 rounded-lg mb-8 border-l-4 ${colors.border}`}>
-              <p className="text-xl text-gray-800 leading-relaxed mb-4">
-                {currentData.puzzle}
-              </p>
-              <p className="text-sm text-gray-600 italic">
-                Wähle die richtige Antwort:
-              </p>
-            </div>
+            const handlePrint = () => {
+                window.print();
+            };
 
-            {!showFeedback ? (
-              <>
-                {showHint && (
-                  <div className="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mb-4">
-                    <p className="text-sm font-semibold text-gray-700 mb-1">💡 Tipp:</p>
-                    <p className="text-gray-700">{currentData.hint}</p>
-                  </div>
-                )}
-                <button
-                  onClick={() => setShowHint(!showHint)}
-                  className="w-full mb-4 bg-yellow-100 hover:bg-yellow-200 text-gray-800 font-semibold py-2 px-4 rounded-lg border border-yellow-300 transition"
-                >
-                  {showHint ? '🙈 Tipp ausblenden' : '💡 Tipp anzeigen'}
-                </button>
-                <div className="grid grid-cols-2 gap-3">
-                  {currentData.options.map((option, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleAnswer(option)}
-                      className="text-center px-6 py-6 bg-white border-2 border-gray-300 rounded-lg hover:border-green-500 hover:bg-green-50 transition text-xl font-semibold"
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <div className="space-y-6">
-                <div className={`p-6 rounded-lg ${isCorrect ? 'bg-green-50 border-2 border-green-500' : 'bg-red-50 border-2 border-red-500'}`}>
-                  <h3 className={`text-2xl font-bold mb-3 ${isCorrect ? 'text-green-800' : 'text-red-800'}`}>
-                    {isCorrect ? '✓ Richtig!' : '✗ Leider falsch'}
-                  </h3>
-                  {!isCorrect && (
-                    <p className="text-gray-700 mb-3 text-lg">
-                      Die richtige Antwort ist: <strong>{currentData.correct}</strong>
-                    </p>
-                  )}
-                  <div className={`bg-white p-4 rounded border-l-4 ${colors.border}`}>
-                    <p className="text-sm font-semibold text-gray-700 mb-2">
-                      {isCorrect ? 'So funktioniert es:' : 'Erklärung:'}
-                    </p>
-                    <p className="text-gray-700 leading-relaxed">
-                      {currentData.explanation}
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={handleNext}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition"
-                >
-                  Weiter <ChevronRight />
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
+            const correctAnswers = answers.filter(a => a.correct).length;
+            const totalAnswers = answers.length;
 
-  if (stage === 'certificate') {
-    const percentage = Math.round((correctAnswers / totalAnswers) * 100);
-    const categories = [...new Set(learnings.map(l => l.category))];
-
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 p-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-lg shadow-2xl p-12 certificate-page">
-            <div className="text-center mb-8">
-              <Award className="w-20 h-20 text-green-600 mx-auto mb-4" />
-              <h1 className="text-4xl font-bold text-gray-800 mb-2">
-                {showContinueOption ? 'Zwischenergebnis' : 'Mathe-Basis Zertifikat'}
-              </h1>
-              <p className="text-xl text-gray-600">
-                {showContinueOption ? 'Erste Runde geschafft!' : 'Alle Runden abgeschlossen!'}
-              </p>
-            </div>
-
-            {showContinueOption && (
-              <div className="bg-blue-50 p-6 rounded-lg mb-8 border-l-4 border-blue-600">
-                <h2 className="text-xl font-bold text-gray-800 mb-3">
-                  Möchtest du weitermachen?
-                </h2>
-                <p className="text-gray-700 mb-4">
-                  Du hast die erste Runde abgeschlossen! Du kannst jetzt aufhören und dein Zertifikat ausdrucken, 
-                  oder du machst freiwillig weitere Runden mit neuen Aufgaben.
-                </p>
-                <div className="flex gap-4 no-print">
-                  <button
-                    onClick={handleContinue}
-                    className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition"
-                  >
-                    🎯 Weitere Runde machen
-                  </button>
-                  <button
-                    onClick={handleFinish}
-                    className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition"
-                  >
-                    ✓ Jetzt beenden
-                  </button>
-                </div>
-              </div>
-            )}
-
-            <div className="border-t-2 border-b-2 border-green-600 py-6 mb-8 text-center">
-              <p className="text-lg text-gray-700 mb-2">
-                Hiermit wird bestätigt, dass
-              </p>
-              <p className="text-3xl font-bold text-gray-800 mb-2">
-                {username}
-              </p>
-              <p className="text-lg text-gray-700">
-                das Mathe-Basis-Tool absolviert hat
-              </p>
-            </div>
-
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                Deine Ergebnisse:
-              </h2>
-              <div className="bg-green-50 p-6 rounded-lg mb-4">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-lg text-gray-700">Richtige Antworten:</span>
-                  <span className="text-3xl font-bold text-green-600">{correctAnswers} / {totalAnswers}</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-4">
-                  <div 
-                    className="bg-green-600 h-4 rounded-full transition-all"
-                    style={{ width: `${percentage}%` }}
-                  />
-                </div>
-                <p className="text-center text-gray-600 mt-2">{percentage}% korrekt</p>
-              </div>
-            </div>
-
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                Erfolgreich gemeisterte Aufgabentypen:
-              </h2>
-              {categories.length > 0 ? (
-                <div className="grid grid-cols-2 gap-3 mb-4">
-                  {categories.map((category, index) => (
-                    <div key={index} className="bg-green-50 p-3 rounded-lg border-l-4 border-green-600">
-                      <p className="font-semibold text-gray-800">✓ {category}</p>
+            if (stage === 'welcome') {
+                return (
+                    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 p-8">
+                        <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-xl p-8">
+                            <div className="flex items-center justify-center mb-6">
+                                <Calculator className="w-12 h-12 text-green-600 mr-4" />
+                                <h1 className="text-4xl font-bold text-gray-800">
+                                    Mathe-Basis
+                                </h1>
+                            </div>
+                            <div className="prose prose-lg mb-8">
+                                <p className="text-gray-700">
+                                    Willkommen! Hier übst du die Grundrechenarten mit einfachen, klaren Aufgaben.
+                                </p>
+                                <p className="text-gray-700">
+                                    <strong>Perfekt für:</strong> Anfänger und zum Auffrischen der Grundlagen.
+                                    Die Aufgaben sind direkt und klar formuliert.
+                                </p>
+                                <div className="bg-green-50 p-4 rounded-lg my-6">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                                        Aufbau:
+                                    </h3>
+                                    <ul className="list-disc list-inside space-y-1 text-gray-700">
+                                        <li><strong>Erste Runde:</strong> 3 Basis-Aufgaben (Pflicht)</li>
+                                        <li><strong>Weitere Runden:</strong> Je 3 Aufgaben (optional)</li>
+                                        <li>Nach jeder Runde kannst du entscheiden: weitermachen oder aufhören</li>
+                                        <li>Level: <strong>A2/Anfang B1 (einfache Grundlagen)</strong></li>
+                                    </ul>
+                                </div>
+                                <p className="text-gray-700">
+                                    <strong>Tipp:</strong> Bei jeder Aufgabe kannst du einen Hinweis einblenden lassen!
+                                </p>
+                            </div>
+                            
+                            <div className="space-y-4">
+                                <label className="block">
+                                    <span className="text-gray-700 font-semibold">Dein Name für das Zertifikat:</span>
+                                    <input
+                                        type="text"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                        placeholder="Gib deinen Namen ein"
+                                    />
+                                </label>
+                                <button
+                                    onClick={handleStart}
+                                    disabled={!username.trim()}
+                                    className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition"
+                                >
+                                    Los geht's <ChevronRight />
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="text-gray-600 text-center">
-                    Noch keine Aufgaben erfolgreich gelöst.
-                  </p>
-                </div>
-              )}
-            </div>
+                );
+            }
 
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                Was du richtig gelöst und gelernt hast:
-              </h2>
-              {learnings.length > 0 ? (
-                <div className="space-y-4">
-                  {learnings.map((learning, index) => (
-                    <div key={index} className="bg-gray-50 p-4 rounded-lg border-l-4 border-green-600">
-                      <p className="font-semibold text-gray-800 mb-1">
-                        ✓ {learning.category}
-                      </p>
-                      <p className="text-sm text-gray-600 italic mb-2">
-                        {learning.puzzle}
-                      </p>
-                      <p className="text-gray-700 text-sm">
-                        {learning.explanation}
-                      </p>
+            if (stage === 'quiz') {
+                const currentData = allRounds[currentRound][currentPuzzle];
+                const isCorrect = selectedAnswer === currentData.correct;
+                const colors = getColorClasses(currentData.color);
+
+                return (
+                    <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-green-100 p-8">
+                        <div className="max-w-3xl mx-auto">
+                            <div className="bg-white rounded-lg shadow-xl p-8">
+                                <div className="mb-6">
+                                    <div className="flex justify-between text-sm text-gray-600 mb-2">
+                                        <span>Runde {currentRound + 1} {currentRound === 0 ? '(Pflicht)' : '(Optional)'}</span>
+                                        <span>Aufgabe {currentPuzzle + 1} von {allRounds[currentRound].length}</span>
+                                    </div>
+                                    <div className="mb-2">
+                                        <span className={`inline-block ${colors.label} text-gray-800 px-3 py-1 rounded-full text-sm font-semibold`}>
+                                            {currentData.category}
+                                        </span>
+                                    </div>
+                                    <div className="w-full bg-gray-200 rounded-full h-2">
+                                        <div 
+                                            className="bg-green-600 h-2 rounded-full transition-all"
+                                            style={{ 
+                                                width: `${((currentPuzzle + 1) / allRounds[currentRound].length) * 100}%` 
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className={`${colors.bg} p-6 rounded-lg mb-8 border-l-4 ${colors.border}`}>
+                                    <p className="text-xl text-gray-800 leading-relaxed mb-4">
+                                        {currentData.puzzle}
+                                    </p>
+                                    <p className="text-sm text-gray-600 italic">
+                                        Wähle die richtige Antwort:
+                                    </p>
+                                </div>
+
+                                {!showFeedback ? (
+                                    <>
+                                        {showHint && (
+                                            <div className="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mb-4">
+                                                <p className="text-sm font-semibold text-gray-700 mb-1">💡 Tipp:</p>
+                                                <p className="text-gray-700">{currentData.hint}</p>
+                                            </div>
+                                        )}
+                                        <button
+                                            onClick={() => setShowHint(!showHint)}
+                                            className="w-full mb-4 bg-yellow-100 hover:bg-yellow-200 text-gray-800 font-semibold py-2 px-4 rounded-lg border border-yellow-300 transition"
+                                        >
+                                            {showHint ? '🙈 Tipp ausblenden' : '💡 Tipp anzeigen'}
+                                        </button>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            {currentData.options.map((option, index) => (
+                                                <button
+                                                    key={index}
+                                                    onClick={() => handleAnswer(option)}
+                                                    className="text-center px-6 py-6 bg-white border-2 border-gray-300 rounded-lg hover:border-green-500 hover:bg-green-50 transition text-xl font-semibold"
+                                                >
+                                                    {option}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="space-y-6">
+                                        <div className={`p-6 rounded-lg ${isCorrect ? 'bg-green-50 border-2 border-green-500' : 'bg-red-50 border-2 border-red-500'}`}>
+                                            <h3 className={`text-2xl font-bold mb-3 ${isCorrect ? 'text-green-800' : 'text-red-800'}`}>
+                                                {isCorrect ? '✓ Richtig!' : '✗ Leider falsch'}
+                                            </h3>
+                                            {!isCorrect && (
+                                                <p className="text-gray-700 mb-3 text-lg">
+                                                    Die richtige Antwort ist: <strong>{currentData.correct}</strong>
+                                                </p>
+                                            )}
+                                            <div className={`bg-white p-4 rounded border-l-4 ${colors.border}`}>
+                                                <p className="text-sm font-semibold text-gray-700 mb-2">
+                                                    {isCorrect ? 'So funktioniert es:' : 'Erklärung:'}
+                                                </p>
+                                                <p className="text-gray-700 leading-relaxed">
+                                                    {currentData.explanation}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={handleNext}
+                                            className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition"
+                                        >
+                                            Weiter <ChevronRight />
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="bg-gray-50 p-6 rounded-lg text-center">
-                  <p className="text-gray-600">
-                    Du hast noch keine Aufgabe richtig gelöst. Versuche es noch einmal!
-                  </p>
-                </div>
-              )}
-            </div>
-
-            <div className="text-center text-gray-600 text-sm mb-6">
-              <p>{new Date().toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-            </div>
-
-            {!showContinueOption && (
-              <div className="flex gap-4 no-print">
-                <button
-                  onClick={handlePrint}
-                  className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition"
-                >
-                  <Printer /> Zertifikat drucken
-                </button>
-                <button
-                  onClick={() => window.location.reload()}
-                  className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition"
-                >
-                  Neu starten
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <style>{`
-          @media print {
-            .no-print {
-              display: none !important;
+                );
             }
-            .certificate-page {
-              box-shadow: none !important;
-              page-break-after: avoid;
-            }
-            body {
-              background: white !important;
-            }
-          }
-        `}</style>
-      </div>
-    );
-  }
-};
 
-export default MathBasicQuiz;
+            if (stage === 'certificate') {
+                const percentage = Math.round((correctAnswers / totalAnswers) * 100);
+                const categories = [...new Set(learnings.map(l => l.category))];
+
+                return (
+                    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 p-8">
+                        <div className="max-w-4xl mx-auto">
+                            <div className="bg-white rounded-lg shadow-2xl p-12 certificate-page">
+                                <div className="text-center mb-8">
+                                    <Award className="w-20 h-20 text-green-600 mx-auto mb-4" />
+                                    <h1 className="text-4xl font-bold text-gray-800 mb-2">
+                                        {showContinueOption ? 'Zwischenergebnis' : 'Mathe-Basis Zertifikat'}
+                                    </h1>
+                                    <p className="text-xl text-gray-600">
+                                        {showContinueOption ? 'Erste Runde geschafft!' : 'Alle Runden abgeschlossen!'}
+                                    </p>
+                                </div>
+
+                                {showContinueOption && (
+                                    <div className="bg-blue-50 p-6 rounded-lg mb-8 border-l-4 border-blue-600">
+                                        <h2 className="text-xl font-bold text-gray-800 mb-3">
+                                            Möchtest du weitermachen?
+                                        </h2>
+                                        <p className="text-gray-700 mb-4">
+                                            Du hast die erste Runde abgeschlossen! Du kannst jetzt aufhören und dein Zertifikat ausdrucken, 
+                                            oder du machst freiwillig weitere Runden mit neuen Aufgaben.
+                                        </p>
+                                        <div className="flex gap-4 no-print">
+                                            <button
+                                                onClick={handleContinue}
+                                                className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition"
+                                            >
+                                                🎯 Weitere Runde machen
+                                            </button>
+                                            <button
+                                                onClick={handleFinish}
+                                                className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition"
+                                            >
+                                                ✓ Jetzt beenden
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="border-t-2 border-b-2 border-green-600 py-6 mb-8 text-center">
+                                    <p className="text-lg text-gray-700 mb-2">
+                                        Hiermit wird bestätigt, dass
+                                    </p>
+                                    <p className="text-3xl font-bold text-gray-800 mb-2">
+                                        {username}
+                                    </p>
+                                    <p className="text-lg text-gray-700">
+                                        das Mathe-Basis-Tool absolviert hat
+                                    </p>
+                                </div>
+
+                                <div className="mb-8">
+                                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                                        Deine Ergebnisse:
+                                    </h2>
+                                    <div className="bg-green-50 p-6 rounded-lg mb-4">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="text-lg text-gray-700">Richtige Antworten:</span>
+                                            <span className="text-3xl font-bold text-green-600">{correctAnswers} / {totalAnswers}</span>
+                                        </div>
+                                        <div className="w-full bg-gray-200 rounded-full h-4">
+                                            <div 
+                                                className="bg-green-600 h-4 rounded-full transition-all"
+                                                style={{ width: `${percentage}%` }}
+                                            />
+                                        </div>
+                                        <p className="text-center text-gray-600 mt-2">{percentage}% korrekt</p>
+                                    </div>
+                                </div>
+
+                                <div className="mb-8">
+                                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                                        Erfolgreich gemeisterte Aufgabentypen:
+                                    </h2>
+                                    {categories.length > 0 ? (
+                                        <div className="grid grid-cols-2 gap-3 mb-4">
+                                            {categories.map((category, index) => (
+                                                <div key={index} className="bg-green-50 p-3 rounded-lg border-l-4 border-green-600">
+                                                    <p className="font-semibold text-gray-800">✓ {category}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="bg-gray-50 p-4 rounded-lg">
+                                            <p className="text-gray-600 text-center">
+                                                Noch keine Aufgaben erfolgreich gelöst.
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="mb-8">
+                                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                                        Was du richtig gelöst und gelernt hast:
+                                    </h2>
+                                    {learnings.length > 0 ? (
+                                        <div className="space-y-4">
+                                            {learnings.map((learning, index) => (
+                                                <div key={index} className="bg-gray-50 p-4 rounded-lg border-l-4 border-green-600">
+                                                    <p className="font-semibold text-gray-800 mb-1">
+                                                        ✓ {learning.category}
+                                                    </p>
+                                                    <p className="text-sm text-gray-600 italic mb-2">
+                                                        {learning.puzzle}
+                                                    </p>
+                                                    <p className="text-gray-700 text-sm">
+                                                        {learning.explanation}
+                                                    </p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="bg-gray-50 p-6 rounded-lg text-center">
+                                            <p className="text-gray-600">
+                                                Du hast noch keine Aufgabe richtig gelöst. Versuche es noch einmal!
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="text-center text-gray-600 text-sm mb-6">
+                                    <p>{new Date().toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                                </div>
+
+                                {!showContinueOption && (
+                                    <div className="flex gap-4 no-print">
+                                        <button
+                                            onClick={handlePrint}
+                                            className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition"
+                                        >
+                                            <Printer /> Zertifikat drucken
+                                        </button>
+                                        <button
+                                            onClick={() => window.location.reload()}
+                                            className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition"
+                                        >
+                                            Neu starten
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <style>{`
+                            @media print {
+                                .no-print {
+                                    display: none !important;
+                                }
+                                .certificate-page {
+                                    box-shadow: none !important;
+                                    page-break-after: avoid;
+                                }
+                                body {
+                                    background: white !important;
+                                }
+                            }
+                        `}</style>
+                    </div>
+                );
+            }
+        };
+
+        ReactDOM.render(<MathBasicQuiz />, document.getElementById('root'));
+    </script>
+</body>
+</html>
