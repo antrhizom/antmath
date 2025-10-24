@@ -325,6 +325,12 @@
                                 >
                                     Los geht's <ChevronRight />
                                 </button>
+                                <a
+                                    href="index.html"
+                                    className="block text-center text-gray-600 hover:text-gray-800 font-semibold py-2"
+                                >
+                                    ← Zurück zur Startseite
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -559,20 +565,30 @@
                                 </div>
 
                                 {!showContinueOption && (
-                                    <div className="flex gap-4 no-print">
-                                        <button
-                                            onClick={handlePrint}
-                                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition"
-                                        >
-                                            <Printer /> Zertifikat drucken
-                                        </button>
-                                        <button
-                                            onClick={() => window.location.reload()}
-                                            className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition"
-                                        >
-                                            Neu starten
-                                        </button>
-                                    </div>
+                                    <>
+                                        <div className="flex gap-4 no-print mb-4">
+                                            <button
+                                                onClick={handlePrint}
+                                                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition"
+                                            >
+                                                <Printer /> Zertifikat drucken
+                                            </button>
+                                            <button
+                                                onClick={() => window.location.reload()}
+                                                className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition"
+                                            >
+                                                Neu starten
+                                            </button>
+                                        </div>
+                                        <div className="text-center no-print">
+                                            <a
+                                                href="index.html"
+                                                className="inline-block text-gray-600 hover:text-gray-800 font-semibold"
+                                            >
+                                                ← Zurück zur Startseite
+                                            </a>
+                                        </div>
+                                    </>
                                 )}
                             </div>
                         </div>
